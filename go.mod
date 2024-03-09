@@ -1,3 +1,3 @@
 module github.com/artforteam2018/yametrics
 
-go 1.22.0
+go 1.21.8
