@@ -61,10 +61,10 @@ func handleGauge(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
 	mux := http.NewServeMux()
 	mux.HandleFunc("/update/", handleGauge)
 
+	fmt.Println("server is listening on port 8080")
 	err := http.ListenAndServe(":8080", mux)
 
 	if err != nil {
