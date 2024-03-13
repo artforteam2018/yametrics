@@ -5,23 +5,9 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/artforteam2018/yametrics/internal/server/components/metrics"
 )
-
-type MemStorage struct {
-	gauge   map[string][]float64
-	counter map[string][]int64
-}
-
-var memStorage = MemStorage{
-	make(map[string][]float64),
-	make(map[string][]int64)}
-
-func (s *MemStorage) addGauge(metricName string, value float64) {
-	if s.gauge[metricName] == nil {
-		s.gauge[metricName] = []float64{}
-	}
-	s.gauge[metricName] = append(s.gauge[metricName], value)
-}
 
 func HandleGauge(w http.ResponseWriter, r *http.Request) {
 	splittedValues := strings.Split(r.URL.Path, "/")
@@ -36,7 +22,10 @@ func HandleGauge(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 	}
-	memStorage.addGauge(metricName, value)
-	fmt.Println(metricName, value)
 
+	gauge := metrics.GetGauge()
+
+	gauge.Add(metricName, value)
+
+	fmt.Println(metricName, value)
 }

@@ -5,14 +5,9 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-)
 
-func (s *MemStorage) addCounter(metricName string, value int64) {
-	if s.counter[metricName] == nil {
-		s.counter[metricName] = []int64{}
-	}
-	s.counter[metricName] = append(s.counter[metricName], value)
-}
+	"github.com/artforteam2018/yametrics/internal/server/components/metrics"
+)
 
 func HandleCounter(w http.ResponseWriter, r *http.Request) {
 	splittedValues := strings.Split(r.URL.Path, "/")
@@ -27,6 +22,8 @@ func HandleCounter(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 	}
-	memStorage.addCounter(metricName, value)
+	counter := metrics.GetCounter()
+
+	counter.Add(metricName, value)
 	fmt.Println(metricName, value)
 }
