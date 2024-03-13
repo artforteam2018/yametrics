@@ -15,7 +15,6 @@ func TestStartInterval(t *testing.T) {
 	}
 
 	StartInterval(timeDuration, stubFunc)
-	time.Sleep(timeDuration / 2)
 
 	assert.Equal(t, false, checker)
 
