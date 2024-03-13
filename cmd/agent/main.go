@@ -1,25 +1,12 @@
 package main
 
 import (
-	"time"
+	"github.com/artforteam2018/yametrics/internal/agent/app"
 )
-
-const PollInterval = time.Second * 2
-const ReportInterval = time.Second * 3
 
 func main() {
 
-	mstats := MemStats{}
-	mstats.Init()
-	StartInterval(PollInterval, func() {
-		mstats.Scan()
-	})
-
-	StartInterval(ReportInterval, func() {
-		mstats.Send()
-	})
-
-	time.Sleep(1000 * time.Minute)
+	app.Run()
 }
 
 // Хранение памяти в HEAP работает через алгоритм Heap allocator (TCMalloc)
