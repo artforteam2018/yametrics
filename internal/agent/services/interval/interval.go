@@ -15,6 +15,7 @@ func StartInterval(intervalTime time.Duration, runner func()) chan bool {
 			case <-ticker.C:
 				runner()
 			case <-quit:
+				println("hi")
 				ticker.Stop()
 				return
 			}
