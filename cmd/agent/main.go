@@ -1,54 +1,54 @@
 package main
 
-import (
-	"encoding/json"
-	"fmt"
-	"strings"
-)
+import "github.com/artforteam2018/yametrics/internal/agent/app"
 
-type User struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
-}
+// "encoding/json"
+// "fmt"
+// "strings"
 
-const url = "https://jsonplaceholder.typicode.com"
-const method = "GET"
+// type User struct {
+// 	ID       int    `json:"id"`
+// 	Username string `json:"username"`
+// 	Email    string `json:"email"`
+// }
 
-type RequestClient interface {
-	MakeRequest(url string, method string) ([]byte, error)
-}
+// const url = "https://jsonplaceholder.typicode.com"
+// const method = "GET"
 
-func parseRequest(client RequestClient, url string, method string) string {
-	body, err := client.MakeRequest(url, method)
-	var resp []User
+// type RequestClient interface {
+// 	MakeRequest(url string, method string) ([]byte, error)
+// }
 
-	if err != nil {
-		fmt.Printf("Error requesting: %v\n", err)
-	} else {
-		json.Unmarshal(body, &resp)
-	}
+// func parseRequest(client RequestClient, url string, method string) string {
+// 	body, err := client.MakeRequest(url, method)
+// 	var resp []User
 
-	var out []string
+// 	if err != nil {
+// 		fmt.Printf("Error requesting: %v\n", err)
+// 	} else {
+// 		json.Unmarshal(body, &resp)
+// 	}
 
-	for _, u := range resp {
-		out = append(out, u.Username)
-	}
+// 	var out []string
 
-	return strings.Join(out, " ")
-}
+// 	for _, u := range resp {
+// 		out = append(out, u.Username)
+// 	}
+
+// 	return strings.Join(out, " ")
+// }
 
 func main() {
 
-	client := Gentleman{}
-	respG := parseRequest(client, url, method)
+	// client := Gentleman{}
+	// respG := parseRequest(client, url, method)
 
-	fmt.Printf("response from Gentleman: %v\n", respG)
+	// fmt.Printf("response from Gentleman: %v\n", respG)
 
-	client2 := DefaultRequest{}
-	respD := parseRequest(client2, url, method)
+	// client2 := DefaultRequest{}
+	// respD := parseRequest(client2, url, method)
 
-	fmt.Printf("response from Default client: %v\n", respD)
-	// app.Run()
+	// fmt.Printf("response from Default client: %v\n", respD)
+	app.Run()
 
 }

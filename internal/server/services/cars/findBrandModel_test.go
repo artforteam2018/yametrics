@@ -36,9 +36,9 @@ func RequestTest(t *testing.T, h http.Handler, ri RequestInfo) (*http.Response, 
 
 	res := resp.Result()
 
-	defer res.Body.Close()
-
 	body, err := io.ReadAll(res.Body)
+
+	res.Body.Close()
 
 	require.NoError(t, err)
 
