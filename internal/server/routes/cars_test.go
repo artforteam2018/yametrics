@@ -25,7 +25,9 @@ func RequestTest(t *testing.T, h http.Handler, ri RequestInfo) (*http.Response, 
 	require.NoError(t, err)
 
 	resp, err := server.Client().Do(req)
+
 	require.NoError(t, err)
+	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 

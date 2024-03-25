@@ -38,8 +38,6 @@ func RequestTest(t *testing.T, h http.Handler, ri RequestInfo) (*http.Response, 
 
 	body, err := io.ReadAll(res.Body)
 
-	res.Body.Close()
-
 	require.NoError(t, err)
 
 	return res, string(body)
@@ -90,6 +88,8 @@ func TestFindBrandAndModelHandler(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(tt *testing.T) {
 			resp, body := RequestTest(t, http.HandlerFunc(FindBrandAndModelHandler), test.req)
+			defer resp.Body.Close()
+
 			assert.Equal(tt, test.want.StatusCode, resp.StatusCode)
 			if test.want.StatusCode == http.StatusOK {
 				assert.Equal(tt, test.want.body, body)
