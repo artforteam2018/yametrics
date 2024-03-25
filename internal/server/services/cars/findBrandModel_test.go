@@ -34,11 +34,15 @@ func RequestTest(t *testing.T, h http.Handler, ri RequestInfo) (*http.Response, 
 	resp := httptest.NewRecorder()
 	h.ServeHTTP(resp, req)
 
-	body, err := io.ReadAll(resp.Body)
+	res := resp.Result()
+
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
 
 	require.NoError(t, err)
 
-	return resp.Result(), string(body)
+	return res, string(body)
 }
 
 func TestFindBrandAndModelHandler(t *testing.T) {

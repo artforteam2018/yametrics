@@ -23,6 +23,8 @@ func (r DefaultRequest) MakeRequest(url string, method string) ([]byte, error) {
 		return nil, fmt.Errorf("failed to make request: %v", err)
 	}
 
+	defer resp.Body.Close()
+
 	body, err := io.ReadAll(resp.Body)
 
 	if err != nil {
