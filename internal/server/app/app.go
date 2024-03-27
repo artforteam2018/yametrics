@@ -4,19 +4,24 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
+	"flag"
 
 	"github.com/artforteam2018/yametrics/internal/server/routes"
+	"github.com/go-chi/chi/v5"
 )
 
 func Run() {
+
+	addr := flag.String("a", "localhost:8080", "server address to listen on")
+
+	flag.Parse()
 
 	r := chi.NewRouter()
 
 	routes.Init(r)
 
 	fmt.Println("server is listening on port 8080")
-	err := http.ListenAndServe(":8080", r)
+	err := http.ListenAndServe(*addr, r)
 
 	if err != nil {
 		panic(err)
