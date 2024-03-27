@@ -59,6 +59,7 @@ package app
 
 import (
 	"flag"
+	"time"
 
 	"github.com/artforteam2018/yametrics/internal/agent/components/memstats"
 )
@@ -75,6 +76,7 @@ func Run() {
 	// address := re.ReplaceAllString(*addrArg, "")
 
 	memstats.Init(*pollInterval, *reportInterval)
+	time.Sleep(time.Second * 1000)
 
 	// fmt.Println("server is listening on:", address)
 	// err := http.ListenAndServe(address, nil)
