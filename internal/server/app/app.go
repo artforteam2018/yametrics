@@ -12,7 +12,6 @@ import (
 )
 
 func Run() {
-
 	addrArg := flag.String("a", "localhost:8080", "server address to listen on")
 	flag.Parse()
 
