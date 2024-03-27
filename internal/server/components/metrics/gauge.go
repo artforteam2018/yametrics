@@ -26,7 +26,7 @@ func GetGauge() Gauge {
 func (s *Gauge) GetAll() []string {
 	var response []string
 	for k, v := range s.data {
-		response = append(response, k+": "+strconv.FormatFloat(v, 'f', 3, 64))
+		response = append(response, k+": "+strconv.FormatFloat(v, 'f', -1, 64))
 
 	}
 	return response

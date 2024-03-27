@@ -109,7 +109,7 @@ func (m MemStats) Send() {
 	sendHTTP("Alloc", strconv.FormatUint(m.gauge.Alloc, 10))
 	sendHTTP("BuckHashSys", strconv.FormatUint(m.gauge.BuckHashSys, 10))
 	sendHTTP("Frees", strconv.FormatUint(m.gauge.Frees, 10))
-	sendHTTP("GCCPUFraction", strconv.FormatFloat(m.gauge.GCCPUFraction, 'f', 12, 64))
+	sendHTTP("GCCPUFraction", strconv.FormatFloat(m.gauge.GCCPUFraction, 'f', -1, 64))
 	sendHTTP("GCSys", strconv.FormatUint(m.gauge.GCSys, 10))
 	sendHTTP("HeapAlloc", strconv.FormatUint(m.gauge.HeapAlloc, 10))
 	sendHTTP("HeapIdle", strconv.FormatUint(m.gauge.HeapIdle, 10))
