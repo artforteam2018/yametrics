@@ -11,15 +11,14 @@ import (
 
 func Run() {
 	addrArg := flag.String("a", "localhost:8080", "server address to listen on")
-	flag.Parse()
-
-	re := regexp.MustCompile(`(localhost)|(127.0.0.1)`)
-	address := re.ReplaceAllString(*addrArg, "")
 
 	reportInterval := flag.Int("r", 10, "report interval")
 	pollInterval := flag.Int("p", 2, "poll interval")
 
 	flag.Parse()
+
+	re := regexp.MustCompile(`(localhost)|(127.0.0.1)`)
+	address := re.ReplaceAllString(*addrArg, "")
 
 	memstats.Init(*pollInterval, *reportInterval)
 
