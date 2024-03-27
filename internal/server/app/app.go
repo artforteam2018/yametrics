@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	"net/http"
+	"regexp"
 
 	"flag"
 
@@ -12,12 +13,12 @@ import (
 
 func Run() {
 
-	addrArg := flag.String("a", "localhost:2222", "server address to listen on")
+	addrArg := flag.String("a", "localhost:8080", "server address to listen on")
 	flag.Parse()
 
-	// re := regexp.MustCompile(`(localhost)|(127.0.0.1)`)
-	// address := re.ReplaceAllString(*addrArg, "0.0.0.0")
-	address := *addrArg
+	re := regexp.MustCompile(`(localhost)|(127.0.0.1)`)
+	address := re.ReplaceAllString(*addrArg, "")
+	// address := *addrArg
 
 	r := chi.NewRouter()
 
