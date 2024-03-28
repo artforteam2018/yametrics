@@ -17,7 +17,6 @@ func Run() {
 
 	re := regexp.MustCompile(`(localhost)|(127.0.0.1)`)
 	address := re.ReplaceAllString(*addrArg, "")
-	// address := *addrArg
 
 	r := chi.NewRouter()
 
