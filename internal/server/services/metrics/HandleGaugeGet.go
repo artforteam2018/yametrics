@@ -24,5 +24,5 @@ func HandleGaugeGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte(strconv.FormatFloat(value, 'f', 3, 64)))
+	w.Write([]byte(strconv.FormatFloat(value, 'f', -1, 64)))
 }

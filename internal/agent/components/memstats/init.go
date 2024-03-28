@@ -1,18 +1,19 @@
 package memstats
 
 import (
-	"github.com/artforteam2018/yametrics/internal/agent/constants"
+	"time"
+
 	"github.com/artforteam2018/yametrics/internal/agent/services/interval"
 )
 
-func Init() {
-	mstats := MemStats{}
+func Init(pollinterval int, reportinterval int, address string) {
+	mstats := InitMemstats(address)
 	mstats.Init()
-	interval.StartInterval(constants.PollInterval, func() {
+	interval.StartInterval(time.Second*time.Duration(pollinterval), func() {
 		mstats.Scan()
 	})
 
-	interval.StartInterval(constants.ReportInterval, func() {
+	interval.StartInterval(time.Second*time.Duration(reportinterval), func() {
 		mstats.Send()
 	})
 }
