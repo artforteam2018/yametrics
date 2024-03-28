@@ -9,14 +9,12 @@ import (
 
 func Run() {
 	addrArg := flag.String("a", "localhost:8080", "server address to listen on")
-	flag.Parse()
-
-	address := *addrArg
-
 	reportInterval := flag.Int("r", 10, "report interval")
 	pollInterval := flag.Int("p", 2, "poll interval")
 
 	flag.Parse()
+
+	address := *addrArg
 
 	memstats.Init(*pollInterval, *reportInterval, address)
 	time.Sleep(time.Second * 1000)
