@@ -1,6 +1,8 @@
 package main
 
-import "github.com/artforteam2018/yametrics/internal/agent/app"
+import (
+	"github.com/artforteam2018/yametrics/internal/agent/app"
+)
 
 // "encoding/json"
 // "fmt"
@@ -35,8 +37,8 @@ import "github.com/artforteam2018/yametrics/internal/agent/app"
 // 		out = append(out, u.Username)
 // 	}
 
-// 	return strings.Join(out, " ")
-// }
+//		return strings.Join(out, " ")
+//	}
 
 func main() {
 

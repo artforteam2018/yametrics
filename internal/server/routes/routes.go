@@ -14,7 +14,7 @@ import (
 func Init(r *chi.Mux) {
 
 	r.Use(middleware.Recoverer)
-	r.Use(middlewareC.TimerPrint)
+	r.Use(middlewareC.LogRequest)
 
 	r.Mount("/update", MetricRoutesUpdate())
 	r.Mount("/value", MetricRoutesGet())

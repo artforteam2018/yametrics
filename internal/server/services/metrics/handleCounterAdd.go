@@ -1,7 +1,7 @@
 package metrics
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -25,5 +25,5 @@ func HandleCounterAdd(w http.ResponseWriter, r *http.Request) {
 	counter := metrics.GetCounter()
 
 	counter.Add(metricName, value)
-	fmt.Println(metricName, value)
+	log.Println(metricName, value)
 }

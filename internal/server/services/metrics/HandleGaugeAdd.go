@@ -1,7 +1,7 @@
 package metrics
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -26,5 +26,5 @@ func HandleGaugeAdd(w http.ResponseWriter, r *http.Request) {
 
 	gauge.Add(metricName, value)
 
-	fmt.Println(metricName, value)
+	log.Println(metricName, value)
 }
