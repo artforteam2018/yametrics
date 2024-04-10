@@ -1,6 +1,11 @@
 package main
 
-import "github.com/artforteam2018/yametrics/internal/agent/app"
+import (
+	"fmt"
+	"time"
+
+	"github.com/artforteam2018/yametrics/internal/agent/app"
+)
 
 // "encoding/json"
 // "fmt"
@@ -35,11 +40,22 @@ import "github.com/artforteam2018/yametrics/internal/agent/app"
 // 		out = append(out, u.Username)
 // 	}
 
-// 	return strings.Join(out, " ")
-// }
+//		return strings.Join(out, " ")
+//	}
+func toFixed(num float64, precision int) float64 {
+	output := 1.0
+	for i := 0; i < precision; i++ {
+		output *= 10
+	}
+	return float64(int(num*output)) / output
+}
 
 func main() {
-
+	timer := time.Now()
+	for {
+		fmt.Println(int(time.Since(timer).Milliseconds()))
+		time.Sleep(time.Millisecond * 10)
+	}
 	// client := Gentleman{}
 	// respG := parseRequest(client, url, method)
 

@@ -1,7 +1,7 @@
 package app
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/artforteam2018/yametrics/internal/server/routes"
@@ -24,7 +24,7 @@ func Run() {
 
 	routes.Init(r)
 
-	fmt.Println("Welcome, " + colorifyGreen(envVars.user) + ", server is listening on " + colorifyRed(envVars.address))
+	log.Println("Welcome, " + colorifyGreen(envVars.user) + ", server is listening on " + colorifyRed(envVars.address))
 	err := http.ListenAndServe(envVars.address, r)
 
 	if err != nil {
