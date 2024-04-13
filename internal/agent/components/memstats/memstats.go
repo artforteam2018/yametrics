@@ -10,7 +10,10 @@ import (
 
 type MemStats struct {
 	address string
-	gauge   struct {
+	counter struct {
+		Pollcount int
+	}
+	gauge struct {
 		Alloc         uint64
 		BuckHashSys   uint64
 		Frees         uint64
@@ -38,19 +41,18 @@ type MemStats struct {
 		StackSys      uint64
 		Sys           uint64
 		TotalAlloc    uint64
-		Pollcount     int
 		RandomValue   int
 	}
 	metrics runtime.MemStats
 }
 
 func (m *MemStats) incr() {
-	m.gauge.Pollcount++
+	m.counter.Pollcount++
 	m.gauge.RandomValue = rand.Int()
 }
 
 func (m *MemStats) Init() {
-	m.gauge.Pollcount = 0
+	m.counter.Pollcount = 0
 	m.gauge.RandomValue = rand.Int()
 	m.metrics = runtime.MemStats{}
 }
@@ -89,10 +91,18 @@ func (m *MemStats) Scan() {
 	m.incr()
 }
 
-func (m MemStats) sendHTTP(fieldName string, value string) {
-	fmt.Println("send to address", m.address+"update/gauge/"+fieldName+"/"+value)
+func (m MemStats) sendHTTPGauge(fieldName string, value string) {
+	m.sendHTTP(fieldName, value, m.address+"update/gauge/")
+}
 
-	response, err := http.Post(m.address+"update/gauge/"+fieldName+"/"+value, "text/plain", nil)
+func (m MemStats) sendHTTPCounter(fieldName string, value string) {
+	m.sendHTTP(fieldName, value, m.address+"update/counter/")
+}
+
+func (m MemStats) sendHTTP(fieldName string, value string, addressWithType string) {
+	fmt.Println("send to address", addressWithType+fieldName+"/"+value)
+
+	response, err := http.Post(addressWithType+fieldName+"/"+value, "text/plain", nil)
 	if err != nil {
 		fmt.Printf("memstats sending error: %v\n", err)
 		return
@@ -106,35 +116,35 @@ func (m MemStats) sendHTTP(fieldName string, value string) {
 }
 
 func (m MemStats) Send() {
-	m.sendHTTP("Alloc", strconv.FormatUint(m.gauge.Alloc, 10))
-	m.sendHTTP("BuckHashSys", strconv.FormatUint(m.gauge.BuckHashSys, 10))
-	m.sendHTTP("Frees", strconv.FormatUint(m.gauge.Frees, 10))
-	m.sendHTTP("GCCPUFraction", strconv.FormatFloat(m.gauge.GCCPUFraction, 'f', -1, 64))
-	m.sendHTTP("GCSys", strconv.FormatUint(m.gauge.GCSys, 10))
-	m.sendHTTP("HeapAlloc", strconv.FormatUint(m.gauge.HeapAlloc, 10))
-	m.sendHTTP("HeapIdle", strconv.FormatUint(m.gauge.HeapIdle, 10))
-	m.sendHTTP("HeapInuse", strconv.FormatUint(m.gauge.HeapInuse, 10))
-	m.sendHTTP("HeapObjects", strconv.FormatUint(m.gauge.HeapObjects, 10))
-	m.sendHTTP("HeapReleased", strconv.FormatUint(m.gauge.HeapReleased, 10))
-	m.sendHTTP("HeapSys", strconv.FormatUint(m.gauge.HeapSys, 10))
-	m.sendHTTP("LastGC", strconv.FormatUint(m.gauge.LastGC, 10))
-	m.sendHTTP("Lookups", strconv.FormatUint(m.gauge.Lookups, 10))
-	m.sendHTTP("MCacheInuse", strconv.FormatUint(m.gauge.MCacheInuse, 10))
-	m.sendHTTP("MCacheSys", strconv.FormatUint(m.gauge.MCacheSys, 10))
-	m.sendHTTP("MSpanInuse", strconv.FormatUint(m.gauge.MSpanInuse, 10))
-	m.sendHTTP("MSpanSys", strconv.FormatUint(m.gauge.MSpanSys, 10))
-	m.sendHTTP("Mallocs", strconv.FormatUint(m.gauge.Mallocs, 10))
-	m.sendHTTP("NextGC", strconv.FormatUint(m.gauge.NextGC, 10))
-	m.sendHTTP("NumForcedGC", strconv.FormatUint(uint64(m.gauge.NumForcedGC), 10))
-	m.sendHTTP("NumGC", strconv.FormatUint(uint64(m.gauge.NumGC), 10))
-	m.sendHTTP("OtherSys", strconv.FormatUint(m.gauge.OtherSys, 10))
-	m.sendHTTP("PauseTotalNs", strconv.FormatUint(m.gauge.PauseTotalNs, 10))
-	m.sendHTTP("StackInuse", strconv.FormatUint(m.gauge.StackInuse, 10))
-	m.sendHTTP("StackSys", strconv.FormatUint(m.gauge.StackSys, 10))
-	m.sendHTTP("Sys", strconv.FormatUint(m.gauge.Sys, 10))
-	m.sendHTTP("TotalAlloc", strconv.FormatUint(m.gauge.TotalAlloc, 10))
-	m.sendHTTP("PollCount", strconv.FormatUint(uint64(m.gauge.Pollcount), 10))
-	m.sendHTTP("RandomValue", strconv.FormatUint(uint64(m.gauge.RandomValue), 10))
+	m.sendHTTPGauge("Alloc", strconv.FormatUint(m.gauge.Alloc, 10))
+	m.sendHTTPGauge("BuckHashSys", strconv.FormatUint(m.gauge.BuckHashSys, 10))
+	m.sendHTTPGauge("Frees", strconv.FormatUint(m.gauge.Frees, 10))
+	m.sendHTTPGauge("GCCPUFraction", strconv.FormatFloat(m.gauge.GCCPUFraction, 'f', -1, 64))
+	m.sendHTTPGauge("GCSys", strconv.FormatUint(m.gauge.GCSys, 10))
+	m.sendHTTPGauge("HeapAlloc", strconv.FormatUint(m.gauge.HeapAlloc, 10))
+	m.sendHTTPGauge("HeapIdle", strconv.FormatUint(m.gauge.HeapIdle, 10))
+	m.sendHTTPGauge("HeapInuse", strconv.FormatUint(m.gauge.HeapInuse, 10))
+	m.sendHTTPGauge("HeapObjects", strconv.FormatUint(m.gauge.HeapObjects, 10))
+	m.sendHTTPGauge("HeapReleased", strconv.FormatUint(m.gauge.HeapReleased, 10))
+	m.sendHTTPGauge("HeapSys", strconv.FormatUint(m.gauge.HeapSys, 10))
+	m.sendHTTPGauge("LastGC", strconv.FormatUint(m.gauge.LastGC, 10))
+	m.sendHTTPGauge("Lookups", strconv.FormatUint(m.gauge.Lookups, 10))
+	m.sendHTTPGauge("MCacheInuse", strconv.FormatUint(m.gauge.MCacheInuse, 10))
+	m.sendHTTPGauge("MCacheSys", strconv.FormatUint(m.gauge.MCacheSys, 10))
+	m.sendHTTPGauge("MSpanInuse", strconv.FormatUint(m.gauge.MSpanInuse, 10))
+	m.sendHTTPGauge("MSpanSys", strconv.FormatUint(m.gauge.MSpanSys, 10))
+	m.sendHTTPGauge("Mallocs", strconv.FormatUint(m.gauge.Mallocs, 10))
+	m.sendHTTPGauge("NextGC", strconv.FormatUint(m.gauge.NextGC, 10))
+	m.sendHTTPGauge("NumForcedGC", strconv.FormatUint(uint64(m.gauge.NumForcedGC), 10))
+	m.sendHTTPGauge("NumGC", strconv.FormatUint(uint64(m.gauge.NumGC), 10))
+	m.sendHTTPGauge("OtherSys", strconv.FormatUint(m.gauge.OtherSys, 10))
+	m.sendHTTPGauge("PauseTotalNs", strconv.FormatUint(m.gauge.PauseTotalNs, 10))
+	m.sendHTTPGauge("StackInuse", strconv.FormatUint(m.gauge.StackInuse, 10))
+	m.sendHTTPGauge("StackSys", strconv.FormatUint(m.gauge.StackSys, 10))
+	m.sendHTTPGauge("Sys", strconv.FormatUint(m.gauge.Sys, 10))
+	m.sendHTTPGauge("TotalAlloc", strconv.FormatUint(m.gauge.TotalAlloc, 10))
+	m.sendHTTPCounter("PollCount", strconv.FormatUint(uint64(m.counter.Pollcount), 10))
+	m.sendHTTPGauge("RandomValue", strconv.FormatUint(uint64(m.gauge.RandomValue), 10))
 
 }
 
