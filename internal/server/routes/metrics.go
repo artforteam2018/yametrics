@@ -8,17 +8,17 @@ import (
 func MetricRoutesUpdate() chi.Router {
 	r := chi.NewRouter()
 
-	r.Post("/", metrics.HandleNoMetric)
+	r.Post("/", metrics.PostMetricByData)
 	r.Route("/{metrictype}/{metricname}/{metricvalue}", func(r chi.Router) {
-		r.Post("/", metrics.HandleNoMetric)
+		r.Post("/", metrics.NoMetric)
 	})
 
 	r.Route("/gauge/{metricname}/{metricvalue}", func(r chi.Router) {
-		r.Post("/", metrics.HandleGaugeAdd)
+		r.Post("/", metrics.GaugeAdd)
 	})
 
 	r.Route("/counter/{metricname}/{metricvalue}", func(r chi.Router) {
-		r.Post("/", metrics.HandleCounterAdd)
+		r.Post("/", metrics.CounterAdd)
 	})
 
 	return r
@@ -28,14 +28,15 @@ func MetricRoutesGet() chi.Router {
 	r := chi.NewRouter()
 
 	r.Route("/gauge/{metricname}", func(r chi.Router) {
-		r.Get("/", metrics.HandleGaugeGet)
+		r.Get("/", metrics.GaugeGet)
 	})
 
 	r.Route("/counter/{metricname}", func(r chi.Router) {
-		r.Get("/", metrics.HandleCounterGet)
+		r.Get("/", metrics.CounterGet)
 	})
 
-	r.Get("/", metrics.HandleAllMetrics)
+	r.Get("/", metrics.GetAllMetrics)
+	r.Post("/", metrics.GetMetricByData)
 
 	return r
 }

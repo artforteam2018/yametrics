@@ -9,7 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func HandleCounterAdd(w http.ResponseWriter, r *http.Request) {
+func CounterAdd(w http.ResponseWriter, r *http.Request) {
 	metricName := chi.URLParam(r, "metricname")
 	metricValue := chi.URLParam(r, "metricvalue")
 	if metricName == "" || metricValue == "" {
@@ -22,8 +22,6 @@ func HandleCounterAdd(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-	counter := metrics.GetCounter()
-
-	counter.Add(metricName, value)
+	metrics.Counter.Add(metricName, value)
 	log.Println(metricName, value)
 }

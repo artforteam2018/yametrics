@@ -7,7 +7,7 @@ import (
 )
 
 func TestAddCounter(t *testing.T) {
-	counter := GetCounter()
+	counter := Counter
 	counter.Add("testm", 1)
 
 	assert.Equal(t, int64(1), counter.data["testm"])

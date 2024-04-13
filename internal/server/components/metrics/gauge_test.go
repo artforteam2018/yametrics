@@ -7,8 +7,8 @@ import (
 )
 
 func TestAddGauge(t *testing.T) {
-	counter := GetGauge()
-	counter.Add("testm", 1)
+	gauge := Gauge
+	gauge.Add("testm", 1)
 
-	assert.Equal(t, float64(1), counter.data["testm"])
+	assert.Equal(t, float64(1), gauge.data["testm"])
 }
