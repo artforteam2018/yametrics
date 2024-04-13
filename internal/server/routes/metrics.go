@@ -8,7 +8,7 @@ import (
 func MetricRoutesUpdate() chi.Router {
 	r := chi.NewRouter()
 
-	r.Post("/", metrics.PostMetricJSON)
+	r.Post("/", metrics.PostMetricByData)
 	r.Route("/{metrictype}/{metricname}/{metricvalue}", func(r chi.Router) {
 		r.Post("/", metrics.NoMetric)
 	})
@@ -36,7 +36,7 @@ func MetricRoutesGet() chi.Router {
 	})
 
 	r.Get("/", metrics.GetAllMetrics)
-	r.Post("/", metrics.GetMetricJSON)
+	r.Post("/", metrics.GetMetricByData)
 
 	return r
 }

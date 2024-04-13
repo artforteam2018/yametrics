@@ -20,7 +20,7 @@ type metricsResponse struct {
 	Value float64 `json:"value,omitempty"` // значение метрики в случае передачи gauge
 }
 
-func GetMetricJSON(w http.ResponseWriter, r *http.Request) {
+func GetMetricByData(w http.ResponseWriter, r *http.Request) {
 
 	var requestData metricsGetRequest
 

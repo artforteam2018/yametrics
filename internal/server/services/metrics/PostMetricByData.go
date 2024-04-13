@@ -8,13 +8,20 @@ import (
 )
 
 type metricsPostRequest struct {
+	ID    string   `json:"id"`              // имя метрики
+	MType string   `json:"type"`            // параметр, принимающий значение gauge или counter
+	Delta *int64   `json:"delta,omitempty"` // значение метрики в случае передачи counter
+	Value *float64 `json:"value,omitempty"` // значение метрики в случае передачи gauge
+}
+
+type metricsPostResponse struct {
 	ID    string  `json:"id"`              // имя метрики
 	MType string  `json:"type"`            // параметр, принимающий значение gauge или counter
 	Delta int64   `json:"delta,omitempty"` // значение метрики в случае передачи counter
 	Value float64 `json:"value,omitempty"` // значение метрики в случае передачи gauge
 }
 
-func PostMetricJSON(w http.ResponseWriter, r *http.Request) {
+func PostMetricByData(w http.ResponseWriter, r *http.Request) {
 
 	var requestData metricsPostRequest
 
@@ -33,13 +40,21 @@ func PostMetricJSON(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	responseData := metricsPostResponse{requestData.ID, requestData.MType, 0, 0}
+
 	if requestData.MType == "counter" {
-		requestData.Delta = metrics.Counter.Add(requestData.ID, requestData.Delta)
+		if requestData.Delta == nil {
+			http.Error(w, "Invalid value", http.StatusBadRequest)
+		}
+		responseData.Delta = metrics.Counter.Add(requestData.ID, *requestData.Delta)
 	} else {
-		requestData.Value = metrics.Gauge.Add(requestData.ID, requestData.Value)
+		if requestData.Value == nil {
+			http.Error(w, "Invalid value", http.StatusBadRequest)
+		}
+		responseData.Value = metrics.Gauge.Add(requestData.ID, *requestData.Value)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 
-	json.NewEncoder(w).Encode(requestData)
+	json.NewEncoder(w).Encode(responseData)
 }
