@@ -39,19 +39,19 @@ type MemStats struct {
 		Sys           uint64
 		TotalAlloc    uint64
 		Pollcount     int
+		RandomValue   int
 	}
-	metrics     runtime.MemStats
-	RandomValue int
+	metrics runtime.MemStats
 }
 
 func (m *MemStats) incr() {
 	m.gauge.Pollcount++
-	m.RandomValue = rand.Int()
+	m.gauge.RandomValue = rand.Int()
 }
 
 func (m *MemStats) Init() {
 	m.gauge.Pollcount = 0
-	m.RandomValue = rand.Int()
+	m.gauge.RandomValue = rand.Int()
 	m.metrics = runtime.MemStats{}
 }
 
@@ -133,7 +133,8 @@ func (m MemStats) Send() {
 	m.sendHTTP("StackSys", strconv.FormatUint(m.gauge.StackSys, 10))
 	m.sendHTTP("Sys", strconv.FormatUint(m.gauge.Sys, 10))
 	m.sendHTTP("TotalAlloc", strconv.FormatUint(m.gauge.TotalAlloc, 10))
-	m.sendHTTP("Pollcount", strconv.FormatUint(uint64(m.gauge.Pollcount), 10))
+	m.sendHTTP("PollCount", strconv.FormatUint(uint64(m.gauge.Pollcount), 10))
+	m.sendHTTP("RandomValue", strconv.FormatUint(uint64(m.gauge.RandomValue), 10))
 
 }
 
