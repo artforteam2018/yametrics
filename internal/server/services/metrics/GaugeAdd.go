@@ -9,7 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func HandleGaugeAdd(w http.ResponseWriter, r *http.Request) {
+func GaugeAdd(w http.ResponseWriter, r *http.Request) {
 	metricName := chi.URLParam(r, "metricname")
 	metricValue := chi.URLParam(r, "metricvalue")
 	if metricName == "" || metricValue == "" {
@@ -22,9 +22,7 @@ func HandleGaugeAdd(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 	}
 
-	gauge := metrics.GetGauge()
-
-	gauge.Add(metricName, value)
+	metrics.Gauge.Add(metricName, value)
 
 	log.Println(metricName, value)
 }

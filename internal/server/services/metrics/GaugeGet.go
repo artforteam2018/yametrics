@@ -8,16 +8,14 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func HandleGaugeGet(w http.ResponseWriter, r *http.Request) {
+func GaugeGet(w http.ResponseWriter, r *http.Request) {
 	metricName := chi.URLParam(r, "metricname")
 	if metricName == "" {
 		http.NotFound(w, r)
 		return
 	}
 
-	gauge := metrics.GetGauge()
-
-	value, ok := gauge.Get(metricName)
+	value, ok := metrics.Gauge.Get(metricName)
 
 	if !ok {
 		http.NotFound(w, r)
