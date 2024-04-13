@@ -2,7 +2,6 @@ package metrics
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/artforteam2018/yametrics/internal/server/components/metrics"
@@ -11,13 +10,6 @@ import (
 type metricsGetRequest struct {
 	ID    string `json:"id"`   // имя метрики
 	MType string `json:"type"` // параметр, принимающий значение gauge или counter
-}
-
-type metricsResponse struct {
-	ID    string  `json:"id"`    // имя метрики
-	MType string  `json:"type"`  // параметр, принимающий значение gauge или counter
-	Delta int64   `json:"delta"` // значение метрики в случае передачи counter
-	Value float64 `json:"value"` // значение метрики в случае передачи gauge
 }
 
 func GetMetricByData(w http.ResponseWriter, r *http.Request) {
@@ -39,20 +31,24 @@ func GetMetricByData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseData := metricsResponse{requestData.ID, requestData.MType, 0, 0}
+	var answer []byte
+	var err error
 
 	if requestData.MType == "counter" {
+		responseData := metricsResponseCounter{requestData.ID, requestData.MType, 0}
 		responseData.Delta, _ = metrics.Counter.Get(requestData.ID)
+		answer, err = json.Marshal(responseData)
 	} else {
+		responseData := metricsResponseGauge{requestData.ID, requestData.MType, 0}
 		responseData.Value, _ = metrics.Gauge.Get(requestData.ID)
+		answer, err = json.Marshal(responseData)
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-
-	fmt.Println(responseData)
-
-	if err := json.NewEncoder(w).Encode(responseData); err != nil {
+	if err != nil {
 		http.Error(w, "Cannot send response "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(answer)
 }
